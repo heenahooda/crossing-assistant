@@ -1,5 +1,6 @@
-// Offline cache for the app shell. Bump CACHE when you change any file.
-const CACHE = 'crossing-assistant-v1';
+// Offline cache for the app shell. Change the version number whenever you edit any file.
+const CACHE = 'crossing-assistant-v2';
+const PREFIX = 'crossing-assistant-v';   // only ever delete this app's own old caches
 const FILES = ['./', './index.html', './warm.html', './manifest.webmanifest',
                './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
@@ -8,7 +9,7 @@ self.addEventListener('install', e => {
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k.startsWith(PREFIX) && k !== CACHE).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
